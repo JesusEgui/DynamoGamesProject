@@ -1,0 +1,89 @@
+import boto3
+
+# Declare the profile name and region
+session = boto3.Session(profile_name='AlexTerraform', region_name='us-east-2')
+
+# Initialize a DynamoDB client
+dynamodb = session.client('dynamodb')
+
+# Specify the table name
+table_name = 'GameCatalog'
+
+# Define the games you want to add
+games = [
+    {
+        "title": {"S": "Halo: Combat Evolved"},
+        "created": {"S": "2001-11-15"},
+        "Genre": {"S": "First-Person Shooter"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "Grand Theft Auto: Vice City"},
+        "created": {"S": "2002-10-29"},
+        "Genre": {"S": "Action-Adventure"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "The Elder Scrolls III: Morrowind"},
+        "created": {"S": "2002-06-06"},
+        "Genre": {"S": "Action RPG"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "Final Fantasy X"},
+        "created": {"S": "2001-12-17"},
+        "Genre": {"S": "Role-Playing Game"}, 
+    },
+    {
+        "title": {"S": "Metal Gear Solid 2: Sons of Liberty"},
+        "created": {"S": "2001-11-12"},
+        "Genre": {"S": "Stealth Action"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "Super Smash Bros. Melee"},
+        "created": {"S": "2001-11-21"},
+        "Genre": {"S": "Fighting"},
+        "Rating": {"S": "Everyone"},
+    },
+    {
+        "title": {"S": "Diablo II"},
+        "created": {"S": "2000-06-29"},
+        "Genre": {"S": "Action RPG"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "Tony Hawk's Pro Skater 2"},
+        "created": {"S": "2000-09-20"},
+        "Genre": {"S": "Sports"},
+        "Rating": {"S": "Teen"},
+    },
+    {
+        "title": {"S": "Half-Life 2"},
+        "created": {"S": "2004-11-16"},
+        "Genre": {"S": "First-Person Shooter"},
+        "Rating": {"S": "Mature"},
+    },
+    {
+        "title": {"S": "Counter-Strike: Source"},
+        "created": {"S": "2004-11-01"},
+        "Genre": {"S": "First-Person Shooter"},
+        "Rating": {"S": "Mature"},
+    },
+]
+
+# Create a list of PutRequests for batch writing
+put_requests = [{'PutRequest': {'Item': game}} for game in games]
+
+# Split the put_requests list into batches of 25 items (DynamoDB batch write limit)
+for batch in [put_requests[i:i + 25] for i in range(0, len(put_requests), 25)]:
+    request_items = {table_name: batch}
+    
+    # Perform the batch write operation
+    response = dynamodb.batch_write_item(RequestItems=request_items)
+
+# Check if all items were successfully added
+if no response. get('UnprocessedItems'):
+    print("All Ready LUIT Team!!!!!!!")
+else:
+    print("Problems adding elements.")
